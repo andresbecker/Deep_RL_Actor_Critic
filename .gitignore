@@ -1,0 +1,58 @@
+**/datasets
+**/models
+**/logs
+*.log
+*.npy
+*.csv
+*.html
+*.run.*
+**/.ipynb_checkpoints
+**/__pycache__
+**/Too_heavy_for_git
+
+# Avoid SLURM output
+**/SLURM_output
+
+# Avoid output notebooks
+**/NB_output
+# Avoid temporary parameters
+temp_parameters.json
+tf_dataset_parameters.json
+# Avoid old implementations
+**/Old_notebooks
+**/Old_scripts
+
+# Latex support files
+**/*.acr
+**/*.acn
+**/*.alg
+**/*.aux
+**/*.aux.bak
+**/*.bbl
+**/*.bcf
+**/*.blg
+**/*.dvi
+**/*.fdb_latexmk
+**/*.fls
+**/*.glg
+**/*.gls
+**/*.idx
+**/*.idx.bak
+**/*.ilg
+**/*.ind
+**/*.ist
+**/*.lof
+**/*.log
+**/*.lol
+**/*.lot
+**/*.lox
+**/*.nav
+**/*.out
+**/*.pdf
+**/*.ps
+**/*.snm
+**/*.synctex.gz
+**/*.toc
+**/*.xdy
+*-blx.bib
+/**/_minted-{jobname}
