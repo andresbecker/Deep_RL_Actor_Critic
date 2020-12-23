@@ -128,82 +128,81 @@ However, note that in fact we are not interested in maximizing the reward on eac
 \end{equation}
 where $\gamma \in [0,1]$ is the discount factor.
 
-Recall that the ultimate goal of RL is to find an optimal strategy, such that it maximize the Return. However, how to choose such actions that they lead to states with high rewards? The answer is the \emph{Policy} $\pi$. The policy is the functions that defines the agent’s behavior and maps a state $s$ to an action $a$. this function can be either deterministic or stochastic:
+Recall that the ultimate goal of RL is to find an optimal strategy, such that it maximize the Return. However, how to choose the actions that will lead us to maximize the return? The answer is the \emph{Policy} $\pi$. The policy is the functions that defines the agent’s behavior and maps a state $s$ to an action $a$. this function can be either deterministic or stochastic:
 
 \begin{itemize}
   \item \textbf{Deterministic}: $\pi: \mathcal{S} \rightarrow \mathcal{A}$; i.e. $\pi(s)=a$.
   \item \textbf{Stochastic}: $\pi: \mathcal{S} \times \mathcal{A} \rightarrow [0, 1]$; i.e. $\pi(a|s)=P_{\pi}(A=a|S=s)$.
 \end{itemize}
 
-Now that we have (more or less) a clear idea of what RL seeks (maximize the return $G$) and how to do it (by finding an optimal policy $\pi$), we need to define a way to quantify how good a state $a$ is (in terms of the return $G$) in a given environment (when we follow a policy $\pi$), and how good an action $a$ is (in terms of the return $G$) when the environment is in state $s$ (when we follow a policy $\pi$). This is done through the \emph{State-value} and \emph{Action-value} functions respectively:
+Now that we have (more or less) a clear idea of what RL seeks (maximize the return $G$) and how to do it (by finding an optimal policy $\pi$), we need to define a way to quantify how good a state $a$ is (in terms of the return $G$) in a given environment (when we follow a policy $\pi$), and how good an action $a$ is (in terms of the return $G$) when the environment is in state $s$ (and when we follow a policy $\pi$). This is done through the \emph{State-value} and \emph{Action-value} functions respectively:
 \begin{itemize}
     \item \textbf{State-value}: $V_{\pi}(s):= \mathbb{E}_{\pi}[G_t|s_t=s]$.
     \item \textbf{Action-value}: $Q_{\pi}(s, a):= \mathbb{E}_{\pi}[G_t|s_t=s, a_t=a]$.
 \end{itemize}
 
-%------------------------------------------------
+\noindent However, the Action-value function tell us how valuable and action is w.r.t. the long term (return). But, what if we only want to know the value that taking the action $a$, following the policy $\pi$, could bring in the short term (i.e. when it is executed in an environment to go from state $s$ to the next one $s'$)? This question is answered by the \textbf{Advantage} function:
+
+\begin{equation}
+  A_{\pi}(s,a):=Q_{\pi}(s, a) - V_{\pi}(s)
+\end{equation}
+
+
+%-------------------------------------------------------------------------------
 
 \section{Policy Gradient methods}
-sdcsfcsf
 
-%------------------------------------------------
+There are several ways to approximate an optimal strategy. For example, in \emph{action-value} methods we learn the values of actions and then select
+actions based on their estimated action values (as it is done in \textit{Q-learning}). Nevertheless, this means that their policies would not even exist without the action-value estimates \cite{Sutton1998}.
+
+However, in \emph{Policy Gradient} we consider methods that instead learn a parameterized policy (e.g. an artificial neural network) that can select actions without consulting a value function\footnote{A value function may still be used to learn the policy parameter, but is not required for action selection.}.
+Therefore, we write
+$$\pi(a|s,\boldsymbol{\theta}) = Pr(a_t=a | s_t=s, \boldsymbol{\theta}_t=\boldsymbol{\theta})$$
+ to denote the probability that the action $a$ is taken, given the parameters $\boldsymbol{\theta}$ and that the environment is in state $s$ at time $t$.
+Then, we can approximate an optimal policy by means of gradient ascent while maximizing a performance measure $J(\boldsymbol{\theta})$:
+
+\begin{equation}
+  \boldsymbol{\theta}_{t+1} = \boldsymbol{\theta}_{t} + \alpha \nabla J(\boldsymbol{\theta}_t)
+\end{equation}
+
+es importante poner el hat! busca como
+
+Note that in practice $\nabla J(\boldsymbol{\theta}_t)$ is a stochastic estimate whose expectation approximates the gradient of the performance measure with respect to its argument $\boldsymbol{\theta}_t$.
+
+Then, how to define the performance measure $J(\boldsymbol{\theta})$? Since we seek to maximize the return $G$, then we define it as the value of the first state of the episode\footnote{Note that this definition only applies to the episodic case (i.e. discrete time steps). The definition and explanation of the continuous case is out of the scope of this work.}, i.e. $J(\boldsymbol{\theta}):=v_{\pi_{\boldsymbol{\theta}}}(s_0)$
+
+poner a que es igual es igual la v, luego a que es igual el gradiente de la v (meniona aque el teorema del gradiente ese y la pagina del barto para mayor referencia)
+luego la regla para gradient acent con el nuevo gradiente (pag 327, 13.8)
+
+luego explica por que el baseline y pon la nueva regla de gradient ascent (13.11, pag 329)
+
+fin de seccion
+
+%-------------------------------------------------------------------------------
 
 \section{Actor-Critic}
 
-As I already mentioned, the ultimate goal of RL is to learn a good policy which maximizes the cumulative reward. There are several ways to do this, for example
-in \emph{action-value} methods, we learn the value of actions and then select actions based on their estimated action values \cite{Sutton1998} (as it is done in \textit{Q-learning}). However, in \emph{Actor-Critic} methods we learn the policy directly by maximizing the \emph{Expected Cumulative Reward}, by means of a function which is differentiable w.r.t. its parameters\footnote{In fact \emph{Actor-Critic} methods belong to an even broader category of algorithms called \emph{Policy Gradient} methods.}. Moreover, we can also learn the value function as well.
+Moreover, we can also learn the value function as well.
+
 Therefore, the \emph{Actor} refers to the policy and the \emph{Critic} to the estimate of the value function. In deep RL, both the actor and the critic can be represented by non-linear neural networks function approximators \cite{mnih2016asynchronous}.
-We write $\pi(a|s,\boldsymbol{\theta}) = Pr(A_t=a | S_t=s, \boldsymbol{\theta}_t=\boldsymbol{\theta})$ to denote the probability that the action $a$ is taken at time $t$, given that the environment is in state $s$ with parameters $\boldsymbol{\theta}$. In the same way, $\boldsymbol{W}$ denote the parameters of the function used to learn the value function.
+ In the same way, $\boldsymbol{W}$ denote the parameters of the function used to learn the value function.
 
 We denote the \emph{Expected Cumulative Reward} as $J(\boldsymbol{\theta})$, since we seek to maximize it depending on the parameters of the policy $\pi_{\boldsymbol{\theta}}$. Therefore, we can use \emph{Gradient ascent} in $J$ to maximize the performance of the policy:
 \begin{equation}
   \boldsymbol{\theta}_{t+1} = \boldsymbol{\theta}_{t} + \alpha \nabla J(\boldsymbol{\theta}_t)
 \end{equation}
 
+define quien es el actor, el critic y la advantage (tal vez tendras que pasar la explicacion que ya diste de la q function a la v)
 
+ahora especifica la regla del gradient acent para el actor
 
+para el critic no es necesario (o es directo) puesto que es un problema de regrecion por lo que mse.
 
+por ultimo escribe el algoritmo para actor-critic
 
-%------------------------------------------------
+\section{Trust region-based}
 
-\section{Results}
-
-\begin{table}
-\caption{Example table}
-\centering
-\begin{tabular}{llr}
-\toprule
-\multicolumn{2}{c}{Name} \\
-\cmidrule(r){1-2}
-First name & Last Name & Grade \\
-\midrule
-John & Doe & $7.5$ \\
-Richard & Miles & $2$ \\
-\bottomrule
-\end{tabular}
-\end{table}
-
-\blindtext % Dummy text
-
-\begin{equation}
-\label{eq:emc}
-e = mc^2
-\end{equation}
-
-\blindtext % Dummy text
-
-%------------------------------------------------
-
-\section{Discussion}
-
-\subsection{Subsection One}
-
-A statement requiring citation \cite{Sutton1998}.
-\blindtext % Dummy text
-
-\subsection{Subsection Two}
-
-\blindtext % Dummy text
+algo no muy largo
 
 %-------------------------------------------------------------------------------
 %	REFERENCE LIST

@@ -1,0 +1,6 @@
+Policy Gradient methods
+-------------------------------------------------------------------------------
+- To ensure exploration we generally require that the policy never becomes deterministic (i.e., that π(a|s, θ) in (0, 1),
+for all s, a, θ).
+-Policy-based methods also offer useful ways of dealing with continuous action spaces.
+-Perhaps the simplest advantage that policy parameterization may have over action-value parameterization is that the policy may be a simpler function to approximate.
