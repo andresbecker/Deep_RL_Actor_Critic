@@ -143,21 +143,6 @@ Now that we have (more or less) a clear idea of what RL seeks (maximize the retu
     \item \textbf{Action-value}: $Q_{\pi}(s, a):= \mathbb{E}_{\pi}[G_t|s_t=s, a_t=a]$.
 \end{itemize}
 
-
-mover esto a action value section, ya que la v ahora va a tener parametros w
-
-
-\begin{equation}
-  A_{\pi}(s,a):=Q_{\pi}(s, a) - V_{\pi}(s)
-\end{equation}
-
-\noindent However, the Action-value function tell us how valuable and action is w.r.t. the long term (return). But, what if we only want to know the value that taking the action $a$ (following the policy $\pi$) could bring in the short term (i.e. when it is executed in an environment to go from state $s$ to the next one $s'$)? This question is answered by the \textbf{Advantage} function:
-
-\begin{equation}
-  A_{\pi}(s,a):=Q_{\pi}(s, a) - V_{\pi}(s)
-\end{equation}
-
-
 %-------------------------------------------------------------------------------
 
 \section{Policy Gradient methods}
@@ -216,7 +201,7 @@ Therefore, our learning rule defined in \ref{eq:learn_rule} can be updated to:
   \boldsymbol{\theta}_{t+1} = \boldsymbol{\theta}_{t} + \alpha G_t \nabla \log{\pi (A_t|S_t; \boldsymbol{\theta})}
 \end{equation*}
 
-However, the \emph{Policy Gradient Theorem} can be generalized to include a comparison of the action value to an arbitrary baseline $b(s)$ \cite{Sutton1998}, which can be any function, even a random variable, as long as it does not vary with a:
+However, the \emph{Policy Gradient Theorem} can be generalized to include a comparison of the action-value function to an arbitrary baseline $b(s)$ \cite{Sutton1998}, which can be any function, even a random variable, as long as it does not depend on the action $a$:
 
 \begin{equation*}
   \nabla J({\boldsymbol{\theta}}) \propto
@@ -245,6 +230,41 @@ Finally, we can use this to derive a new update rule that includes a general bas
 
 \section{Actor-Critic}
 
+Equation \ref{eq:learn_rule_bl} give us a rule to update the policy parameters $\boldsymbol{\theta}$ on every time step. However, this rule is incomplete since we don't know the value of the return $G_t$. But, what if we express $G_t$ in something that depends on the state, so we can learn it in parallel with the policy $\pi_{\boldsymbol{\theta}}$? Fortunately, $G_t \approx V_{\pi}(s_t)$ (since recall that $V_{\pi}(s):= \mathbb{E}_{\pi}[G_t|s_t=s]$).
+
+However, if we just replace $G_t$ by a parameterized approximation of the state-value function (e.g. $V(s;\boldsymbol{w})$), we would not be using the feedback (reward) given by the environment, and hence we would hardly learn something meaningful. Instead, we could use the identity $G_t = R_{t+1} + \gamma G_{t+1}$ and replace $G_{t+1}$ with $V(S_{t+1};\boldsymbol{w})$, so we can actually use the observed reward $R_{t+1}$ on every time step. Hence, the update rule ends as:
+
+\begin{equation}
+  \resizebox{.91\linewidth}{!}{%
+  $
+    \boldsymbol{\theta}_{t+1} = \boldsymbol{\theta}_{t} + \alpha (R_{t+1} + \gamma V(S_{t+1};\boldsymbol{w}) - b(S_t)) \nabla \log{\pi (A_t|S_t; \boldsymbol{\theta})}
+  $
+  }
+  \label{eq:learn_rule_3}
+\end{equation}
+
+Equation \ref{eq:learn_rule_3} shows way this method is call \emph{Actor-Critic}. Actor-critic methods consist of two models, which may optionally share parameters:
+\begin{itemize}
+  \item \textbf{Critic} updates the parameters $\boldsymbol{w}$ of the state-value\footnote{Depending on the algorithm, the Critic could be instead the action-value $Q(a|s;\boldsymbol{w})$ function.} function $V(s; \boldsymbol{w})$ and measures (criticize) how good the taken action is.
+  \item \textbf{Actor} updates the parameters $\boldsymbol{\theta}$ of the policy $\pi(a|s; \boldsymbol{\theta})$ function, in the direction suggested by the critic.
+\end{itemize}
+
+Equation \ref{eq:learn_rule_3}, give us a rule that we can finally implement and use. However, there are still one last detail, the definition of the baseline $b(s)$. In general, the baseline leaves the expected value of the update unchanged, but it can significantly reduce the variance (and thus speed the learning). In MDPs the baseline should vary with the state.
+In some states all actions may have high values and we would need a high baseline to differentiate the higher valued actions from the less highly valued ones; in other states all actions may have low values and a low baseline would be appropriate.
+Therefore, one natural choice for the baseline is an estimate of the state-value function, $V(S_{t};\boldsymbol{w})$ \cite{Sutton1998}.
+Hence, the update rule ends as:
+
+\begin{equation}
+  \resizebox{.91\linewidth}{!}{%
+  $
+    \boldsymbol{\theta}_{t+1} = \boldsymbol{\theta}_{t} + \alpha (R_{t+1} + \gamma V(S_{t+1};\boldsymbol{w}) - V(S_{t};\boldsymbol{w})) \nabla \log{\pi (A_t|S_t; \boldsymbol{\theta})}
+  $
+  }
+  \label{eq:learn_rule_4}
+\end{equation}
+
+A pseudocode for an algorithm which uses rule \ref{eq:learn_rule_4} is shown in \ref{alg:A2C}.
+
 %\resizebox{.95\linewidth}{!}{%
 \begin{algorithm}[h]
  \textbf{Input}: differentiable policy and state-value function parameterization $\pi(a|s;\boldsymbol{\theta})$ and $V(s;|s;\boldsymbol{w})$\;
@@ -264,30 +284,45 @@ Finally, we can use this to derive a new update rule that includes a general bas
   }
  }
  \caption{Advantage Actor Critic pseudocode \cite{Sutton1998}.}
+ \label{alg:A2C}
 \end{algorithm}
 %}
 
+The \emph{Advantage Actor Critic} showed in algorithm \ref{alg:A2C} was named after the \emph{Advantage} function $A(S_t, A_t):=R_{t+1} + \gamma V(S_{t+1};\boldsymbol{w}) - V(S_{t};\boldsymbol{w})$, which captures how better an action is compared to the others at a given state\footnote{In some sense, instead of having the critic to learn the state values, we make it learn the Advantage values. In that way, the evaluation of an action is based not only on how good the action is, but also how much better it can be.}.
 
-One down side of policy gradient methods is that they can ha
+\section{Trust region-based policy optimization}
 
-poner aqui la foto del video (el diagrama de ben)
+The Advantage Actor Critic pseudocode shown in algorithm \ref{alg:A2C} should in principle be able to approximate an optimal policy. However, in practice the training process is often unstable. One reason for this is the policy update. Recall that RL algorithms learn from data generated by the interaction between the environment and the agent (i.e. the policy). Therefore, a strong change in the policy means a strong change in the data distribution. Unlike supervised learning, where the learning and data are typically independent (the learning process can not mess the dataset), in RL the training and the data is strongly related. Therefore, a too aggressive update in the policy could lead to a bad policy which will result in poor data, and therefore in a poor training process.
 
-Moreover, we can also learn the value function as well.
+One way to prevent instability in the training process is by adding regularization to the difference between subsequent policies. This can be achieved using the Kullback–Leibler divergence $D_{KL}$ between the actions distribution of the previous policy $\pi_{\theta_{old}}$ and the new policy $\pi_{\theta}$ (\cite{intro2RL} and \cite{Aclecture}:
 
-Therefore, the \emph{Actor} refers to the policy and the \emph{Critic} to the estimate of the value function. In deep RL, both the actor and the critic can be represented by non-linear neural networks function approximators \cite{mnih2016asynchronous}.
- In the same way, $\boldsymbol{W}$ denote the parameters of the function used to learn the value function.
+\begin{equation*}
+    D_{KL}(\pi_{\theta_{old}} || \pi_{\theta}) = \mathbb{E} \left[
+    \int \pi(A|S;\boldsymbol{\theta}_{old})
+    \log{\frac{\pi(A|S;\boldsymbol{\theta})}{\pi(A|S;\boldsymbol{\theta}_{old})}}\text{d}a
+    \right]
+\end{equation*}
 
-define quien es el actor, el critic y la advantage (tal vez tendras que pasar la explicacion que ya diste de la q function a la v)
+\noindent If the action space $\mathcal{A}$ is not continuous (i.e. discrete), then we can sum over all the actions instead of integrating.
 
-ahora especifica la regla del gradient acent para el actor
+To consider the difference between subsequent policies in our training, we need to transform our original optimization problem (maximize $J(\boldsymbol{\theta})$) into a constrained optimization problem:
 
-para el critic no es necesario (o es directo) puesto que es un problema de regrecion por lo que mse.
+\begin{equation}
+  \begin{split}
+    \text{maximize} \ \ \ \ \ &J(\boldsymbol{\theta})\\
+    \text{s.t.} \ \ \ \ \ &D_{KL}(\pi_{\theta_{old}} || \pi_{\theta}) \leq \eta
+  \end{split}
+  \label{eq:c_opt}
+\end{equation}
 
-por ultimo escribe el algoritmo para actor-critic
+\noindent where $\eta > 0$ is the regularization hyperparameter (usually small) which specifies how much do we penalize the difference between subsequent policies.
 
-\section{Trust region-based}
+Finally, we can approximate the constrained optimization problem \ref{eq:c_opt} just by maximizing \cite{Vitay}:
 
-algo no muy largo
+\begin{equation}
+  J(\boldsymbol{\theta}) - \eta D_{KL}(\pi_{\theta_{old}} || \pi_{\eta})
+\end{equation}
+
 
 %-------------------------------------------------------------------------------
 %	REFERENCE LIST
