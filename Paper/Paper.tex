@@ -44,6 +44,7 @@
 
 \usepackage{hyperref} % For hyperlinks in the PDF
 
+\usepackage[]{algorithm2e}
 \usepackage{graphicx}
 \usepackage{amsmath}
 
@@ -200,14 +201,14 @@ The problem is that the right hand side of equation \ref{eq:grad} depends on bot
     \sum_{s_t \in \mathcal{S}} \mu (s_t) \sum_{a_t \in \mathcal{A}} Q_{\pi_{\boldsymbol{\theta}}}(s_t,a_t) \nabla \pi (a_t|s_t; \boldsymbol{\theta}) \\
     &=\sum_{s_t \in \mathcal{S}} \mu (s_t) \sum_{a_t \in \mathcal{A}} \pi (a_t|s_t; \boldsymbol{\theta}) Q_{\pi_{\boldsymbol{\theta}}}(s_t,a_t) \frac{\nabla \pi (a_t|s_t; \boldsymbol{\theta})}{\pi (a_t|s_t; \boldsymbol{\theta})} \\
     &=\sum_{s_t \in \mathcal{S}} \mu (s_t) \sum_{a_t \in \mathcal{A}} \pi (a_t|s_t; \boldsymbol{\theta}) Q_{\pi_{\boldsymbol{\theta}}}(s_t,a_t) \nabla \log{\pi (a_t|s_t; \boldsymbol{\theta})} \\
-    &= \mathbb{E}[Q_{\pi_{\boldsymbol{\theta}}}(S_t,A_t) \nabla \log{\pi (A_t|S_t; \boldsymbol{\theta})}] \\
-    &= \mathbb{E}[G_t \nabla \log{\pi (A_t|S_t; \boldsymbol{\theta})}] \\
+    &= \mathbb{E}_{s \sim \mu_{\pi}, a \sim \pi_{\theta}}[Q_{\pi_{\boldsymbol{\theta}}}(S_t,A_t) \nabla \log{\pi (A_t|S_t; \boldsymbol{\theta})}] \\
+    &= \mathbb{E}_{s \sim \mu_{\pi}, a \sim \pi_{\theta}}[G_t \nabla \log{\pi (A_t|S_t; \boldsymbol{\theta})}] \\
   \end{split}
   $}
 \end{equation*}
 
 
-\noindent where $\mathbb{E}$ is the expectation over the distribution of states $\mu(s_t)$ and actions $\pi (a_t|s_t; \boldsymbol{\theta})$; $A_t$ and $S_t$ are random variables ($A_t \sim \mu(s_t)$ and $S_t \sim \pi (a_t|s_t; \boldsymbol{\theta})$); and $Q_{\pi_{\boldsymbol{\theta}}}(S_t,A_t)$ can be replaced by $G_t$ since $\mathbb{E}[G_t| S_t,A_t] = Q_{\pi_{\boldsymbol{\theta}}}(S_t,A_t)$.
+\noindent where $\mathbb{E}_{s \sim \mu_{\pi}, a \sim \pi_{\theta}}$ is the expectation of both state and action distributions following the policy $\pi_{\boldsymbol{\theta}}$; $A_t$ and $S_t$ are random variables ($A_t \sim \mu_{\pi}$ and $S_t \sim \pi_{\theta}$); and $Q_{\pi_{\boldsymbol{\theta}}}(S_t,A_t)$ can be replaced by $G_t$ since $\mathbb{E}[G_t| S_t,A_t] = Q_{\pi_{\boldsymbol{\theta}}}(S_t,A_t)$.
 
 Therefore, our learning rule defined in \ref{eq:learn_rule} can be updated to:
 
@@ -244,17 +245,37 @@ Finally, we can use this to derive a new update rule that includes a general bas
 
 \section{Actor-Critic}
 
+%\resizebox{.95\linewidth}{!}{%
+\begin{algorithm}[h]
+ \textbf{Input}: differentiable policy and state-value function parameterization $\pi(a|s;\boldsymbol{\theta})$ and $V(s;|s;\boldsymbol{w})$\;
+ \textbf{Parameters}: step sizes $\alpha^{\boldsymbol{\theta}}>0,\  \alpha^{\boldsymbol{w}}>0$ and discount factor $\gamma \in [0,1]$\;
+ Initialize policy and state-value parameters $\boldsymbol{\theta}\in\mathbb{R}^d$ and $\boldsymbol{w}\in\mathbb{R}^{d'}$\;
+ \For{Episode = 1, 2, ...}{
+  \While{$S_t$ is not terminal (for each time step $t$)}{
+    Sample action $A_t \sim \pi(\cdot|S_t;\boldsymbol{\theta})$ \;
+    Take action $A_t$ and observe $S_{t+1}, R_{t+1}$\;
+    \If{$S_{t+1}$ is terminal}{
+      $V(S_{t+1}; \boldsymbol{w}) = 0$\;
+    }
+    $\delta \gets R_{t+1} + \gamma V(S_{t+1}; \boldsymbol{w}) - V(S_{t}; \boldsymbol{w})$\;
+    $\boldsymbol{w} \gets \boldsymbol{w} + \alpha^{\boldsymbol{w}} \delta \nabla V(S_{t}; \boldsymbol{w})$\;
+    $\boldsymbol{\theta} \gets \boldsymbol{\theta} + \alpha^{\boldsymbol{\theta}} \delta \nabla \log{\pi(A_{t}|S_{t}; \boldsymbol{\theta})}$\;
+    $S_t \gets S_{t+1}$\;
+  }
+ }
+ \caption{Advantage Actor Critic pseudocode \cite{Sutton1998}.}
+\end{algorithm}
+%}
+
+
+One down side of policy gradient methods is that they can ha
+
 poner aqui la foto del video (el diagrama de ben)
 
 Moreover, we can also learn the value function as well.
 
 Therefore, the \emph{Actor} refers to the policy and the \emph{Critic} to the estimate of the value function. In deep RL, both the actor and the critic can be represented by non-linear neural networks function approximators \cite{mnih2016asynchronous}.
  In the same way, $\boldsymbol{W}$ denote the parameters of the function used to learn the value function.
-
-We denote the \emph{Expected Cumulative Reward} as $J(\boldsymbol{\theta})$, since we seek to maximize it depending on the parameters of the policy $\pi_{\boldsymbol{\theta}}$. Therefore, we can use \emph{Gradient ascent} in $J$ to maximize the performance of the policy:
-\begin{equation}
-  \boldsymbol{\theta}_{t+1} = \boldsymbol{\theta}_{t} + \alpha \nabla J(\boldsymbol{\theta}_t)
-\end{equation}
 
 define quien es el actor, el critic y la advantage (tal vez tendras que pasar la explicacion que ya diste de la q function a la v)
 
