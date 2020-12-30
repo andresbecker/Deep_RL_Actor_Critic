@@ -278,7 +278,7 @@ A pseudocode for an algorithm which uses rule \ref{eq:learn_rule_4} is shown in 
       $V(S_{t+1}; \boldsymbol{w}) = 0$\;
     }
     $\delta \gets R_{t+1} + \gamma V(S_{t+1}; \boldsymbol{w}) - V(S_{t}; \boldsymbol{w})$\;
-    $\boldsymbol{w} \gets \boldsymbol{w} + \alpha^{\boldsymbol{w}} \delta \nabla V(S_{t}; \boldsymbol{w})$\;
+    $\boldsymbol{w} \gets \boldsymbol{w} - \alpha^{\boldsymbol{w}} \delta \nabla V(S_{t}; \boldsymbol{w})$\;
     $\boldsymbol{\theta} \gets \boldsymbol{\theta} + \alpha^{\boldsymbol{\theta}} \delta \nabla \log{\pi(A_{t}|S_{t}; \boldsymbol{\theta})}$\;
     $S_t \gets S_{t+1}$\;
   }
