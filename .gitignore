@@ -55,4 +55,5 @@ tf_dataset_parameters.json
 **/*.toc
 **/*.xdy
 *-blx.bib
+*.mp4
 /**/_minted-{jobname}
