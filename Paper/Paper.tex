@@ -115,7 +115,7 @@ The tuple $(s_t, a_t, r_t, s_{t+1})$ is known as \emph{transition} step.
 This interactions continues until the agent: \textit{i}) Completes the task successfully; \textit{ii}) Fails; \textit{iii}) Reach a time limit. This chain of transition steps from the beginning ($t=1$) until the end ($t=T$) is call \emph{Episode}.
 We are interested in environments for which the model that defines them is unknown (\emph{Model-free RL}), and has to be learned explicitly as part of the algorithm (otherwise the optimal solution can be found by means of \emph{Dynamec Programming} (DP)).
 
-\noindent This interaction  is an example of a Markov Decision Process (MDP)\cite{Sutton1998} $\mathcal{M}=(\mathcal{S}, \mathcal{A}, P, R)$, where:
+\noindent This interaction  is an example of a Markov Decision Process (MDP)\cite{Sutton1998} $\mathcal{M}=<\mathcal{S}, \mathcal{A}, P, R>$, where:
 
 \begin{itemize}
     \item $\mathcal{S}$ is the set of states that holds the Markov property\footnote{The conditional probability distribution of future states (conditional on both past and present states) depends only upon the present state, not on the sequence of events that preceded it, i.e. $P(s_{t+1}|s_{t}, s_{t-1},\dots, s_1)=P(s_{t+1}|s_{t})$.}.
@@ -137,7 +137,7 @@ Recall that the ultimate goal of RL is to find an optimal strategy, such that it
   \item \textbf{Stochastic}: $\pi: \mathcal{S} \times \mathcal{A} \rightarrow [0, 1]$; i.e. $\pi(a|s)=P_{\pi}(A=a|S=s)$.
 \end{itemize}
 
-Now that we have (more or less) a clear idea of what RL seeks (maximize the return $G$) and how to do it (by finding an optimal policy $\pi$), we need to define a way to quantify how good a state $a$ is (in terms of the return $G$) in a given environment (when we follow a policy $\pi$), and how good an action $a$ is (in terms of the return $G$) when the environment is in state $s$ (and when we follow a policy $\pi$). This is done through the \emph{State-value} and \emph{Action-value} functions respectively:
+Now that we have (more or less) a clear idea of what RL seeks (maximize the return $G$) and how to do it (by finding an optimal policy $\pi$), we need to define a way to quantify how good a state $s$ is (in terms of the return $G$) in a given environment (when we follow a policy $\pi$), and how good an action $a$ is (in terms of the return $G$) when the environment is in state $s$ (and when we follow a policy $\pi$). This is done through the \emph{State-value} and \emph{Action-value} functions respectively:
 \begin{itemize}
     \item \textbf{State-value}: $V_{\pi}(s):= \mathbb{E}_{\pi}[G_t|s_t=s]$.
     \item \textbf{Action-value}: $Q_{\pi}(s, a):= \mathbb{E}_{\pi}[G_t|s_t=s, a_t=a]$.
@@ -254,20 +254,41 @@ In some states all actions may have high values and we would need a high baselin
 Therefore, one natural choice for the baseline is an estimate of the state-value function, $V(S_{t};\boldsymbol{w})$ \cite{Sutton1998}.
 Hence, the update rule ends as:
 
-\begin{equation}
-  \resizebox{.91\linewidth}{!}{%
+\begin{equation*}
+  \resizebox{1\linewidth}{!}{%
   $
     \boldsymbol{\theta}_{t+1} = \boldsymbol{\theta}_{t} + \alpha (R_{t+1} + \gamma V(S_{t+1};\boldsymbol{w}) - V(S_{t};\boldsymbol{w})) \nabla \log{\pi (A_t|S_t; \boldsymbol{\theta})}
   $
   }
-  \label{eq:learn_rule_4}
-\end{equation}
+  %\label{eq:learn_rule_4}
+\end{equation*}
 
-A pseudocode for an algorithm which uses rule \ref{eq:learn_rule_4} is shown in \ref{alg:A2C}.
+But, what about the update rule for the state-value function $V(S;\boldsymbol{w})$ parameters $\boldsymbol{w}$? As we did with the policy, we need to start by defining an objective function $E(\boldsymbol{w})$. Since $V: \mathbb{R} \rightarrow \mathbb{R}$ (regression problem), we can just use the \emph{Squared Error} as a loss function (i.e. $E(\boldsymbol{w}):=(V_{\pi}(S) - V(S;\boldsymbol{w}))^2$), and then optimize the approximator parameters $\boldsymbol{w}$ while minimizing it. Therefore:
+
+\begin{equation*}
+  \begin{split}
+    \nabla E(\boldsymbol{w}) &= \nabla (V_{\pi}(S_t) - V(S_t;\boldsymbol{w}))^2 \\
+    &= 2(V_{\pi}(S_t)) - V(S_t;\boldsymbol{w})) \nabla V(S_t;\boldsymbol{w})) \\
+    &\approx 2(R_{t+1} + \gamma V(S_{t+1};\boldsymbol{w}) - V(S_t;\boldsymbol{w})) \nabla V(S_t;\boldsymbol{w}))
+  \end{split}
+\end{equation*}
+
+Therefore, the update rule for $\boldsymbol{w}$ is:
+
+\begin{equation*}
+  \resizebox{1\linewidth}{!}{%
+  $
+    \boldsymbol{w}_{t+1} = \boldsymbol{w}_t - \alpha (R_{t+1} + \gamma V(S_{t+1}; \boldsymbol{w}) - V(S_{t}; \boldsymbol{w})) \nabla V(S_{t}; \boldsymbol{w})
+    $
+  }
+  %\label{eq:learn_rule_w}
+\end{equation*}
+
+A pseudocode for an algorithm which approximate both the policy and the state-value function is shown in \ref{alg:A2C}.
 
 %\resizebox{.95\linewidth}{!}{%
 \begin{algorithm}[h]
- \textbf{Input}: differentiable policy and state-value function parameterization $\pi(a|s;\boldsymbol{\theta})$ and $V(s;|s;\boldsymbol{w})$\;
+ \textbf{Input}: differentiable policy and state-value function parameterization $\pi(a|s;\boldsymbol{\theta})$ and $V(s;\boldsymbol{w})$\;
  \textbf{Parameters}: step sizes $\alpha^{\boldsymbol{\theta}}>0,\  \alpha^{\boldsymbol{w}}>0$ and discount factor $\gamma \in [0,1]$\;
  Initialize policy and state-value parameters $\boldsymbol{\theta}\in\mathbb{R}^d$ and $\boldsymbol{w}\in\mathbb{R}^{d'}$\;
  \For{Episode = 1, 2, ...}{
@@ -320,7 +341,7 @@ To consider the difference between subsequent policies in our training, we need 
 Finally, we can approximate the constrained optimization problem \ref{eq:c_opt} just by maximizing \cite{Vitay}:
 
 \begin{equation}
-  J(\boldsymbol{\theta}) - \eta D_{KL}(\pi_{\theta_{old}} || \pi_{\eta})
+  J(\boldsymbol{\theta}) - \eta D_{KL}(\pi_{\theta_{old}} || \pi_{\theta})
 \end{equation}
 
 
