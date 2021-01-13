@@ -9,7 +9,7 @@ def plot_history(history, avg_history, file):
 
     fig = plt.figure(figsize=(14,10))
     plt.plot(history, alpha=0.7, color='royalblue', label='Total Episode Return')
-    plt.plot(avg_history, alpha=1, color='red', label='Episode Return avg (last 100)')
+    plt.plot(avg_history, alpha=1, color='red', label='Episode Return avg (last 64)')
     #plt.xlim([0-50,len(history)+50])
     plt.grid(True)
     plt.title('Total Episode Return', fontsize=20)
@@ -17,7 +17,7 @@ def plot_history(history, avg_history, file):
     plt.ylabel('Return/Score', fontsize=15)
     plt.legend(loc='upper left')
 
-    plt.savefig(file, format='jpg')
+    plt.savefig(file+'.jpg', format='jpg')
     plt.close(fig)
 
 def test_agent(env, agent=None, heuristic=False, seed=None, render=False, n_episodes=5):
@@ -48,3 +48,4 @@ def test_agent(env, agent=None, heuristic=False, seed=None, render=False, n_epis
             if done: break
 
         print('Total Episode Reward: ',total_reward)
+    env.close()
