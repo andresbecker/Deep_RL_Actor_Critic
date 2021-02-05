@@ -263,7 +263,7 @@ Hence, the update rule ends as:
   %\label{eq:learn_rule_4}
 \end{equation*}
 
-But, what about the update rule for the state-value function $V(S;\boldsymbol{w})$ parameters $\boldsymbol{w}$? As we did with the policy, we need to start by defining an objective function $E(\boldsymbol{w})$. Since $V: \mathbb{R} \rightarrow \mathbb{R}$ (regression problem), we can just use the \emph{Squared Error} as a loss function (i.e. $E(\boldsymbol{w}):=(V_{\pi}(S) - V(S;\boldsymbol{w}))^2$), and then optimize the approximator parameters $\boldsymbol{w}$ while minimizing it. Therefore:
+But, what about the update rule for the state-value function $V(S;\boldsymbol{w})$ parameters $\boldsymbol{w}$? As we did with the policy, we need to start by defining an objective function $E(\boldsymbol{w})$. Since $V: \mathcal{S} \rightarrow \mathbb{R}$ (regression problem), we can just use the \emph{Squared Error} as a loss function (i.e. $E(\boldsymbol{w}):=(V_{\pi}(S) - V(S;\boldsymbol{w}))^2$), and then optimize the approximator parameters $\boldsymbol{w}$ while minimizing it. Therefore:
 
 \begin{equation*}
   \begin{split}
