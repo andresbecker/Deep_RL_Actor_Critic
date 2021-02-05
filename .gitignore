@@ -1,5 +1,3 @@
-**/datasets
-**/Models
 **/logs
 *.log
 *.npy
@@ -8,19 +6,6 @@
 *.run.*
 **/.ipynb_checkpoints
 **/__pycache__
-**/Too_heavy_for_git
-
-# Avoid SLURM output
-**/SLURM_output
-
-# Avoid output notebooks
-**/NB_output
-# Avoid temporary parameters
-temp_parameters.json
-tf_dataset_parameters.json
-# Avoid old implementations
-**/Old_notebooks
-**/Old_scripts
 
 # Latex support files
 **/*.acr
