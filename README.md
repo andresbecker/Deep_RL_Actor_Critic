@@ -2,9 +2,6 @@
 <!--
 *** I'm using markdown "reference style" links for readability.
 *** Reference links are enclosed in brackets [ ] instead of parentheses ( ).
-*** See the bottom of this document for the declaration of the reference variables
-*** for contributors-url, forks-url, etc. This is an optional, concise syntax you may use.
-*** https://www.markdownguide.org/basic-syntax/#reference-style-links
 -->
 
 <!-- PROJECT LOGO -->
@@ -19,7 +16,7 @@
   <p align="center">
     Implementation of an Advantage Actor-Critic using Artificial Neural Networks
     <br />
-    <a href="https://github.com/andresbecker/Deep_RL_Actor_Critic/References/A2C_Summary/A2C_Summary.pdf"><strong>Explore the docs »</strong></a>
+    <a href="https://github.com/andresbecker/Deep_RL_Actor_Critic/blob/main/References/A2C_Summary/A2C_Summary.pdf"><strong>Explore the docs »</strong></a>
   </p>
 </p>
 
@@ -72,7 +69,7 @@ To get a local copy up and running follow these simple steps.
 
 ### Prerequisites
 
-An running installation of Anaconda. If you haven't installed Anaconda yet, you can follow the next tutorial:
+A running installation of Anaconda. If you haven't installed Anaconda yet, you can follow the next tutorial: <br>
 [Anaconda Installation](https://docs.anaconda.com/anaconda/install/)
 
 ### Installation
@@ -98,11 +95,14 @@ open jupyter-lab
 jupyter-lab
 ```
 and navigate to open the notebook `A2C.ipynb`.
+Then, just follow the steps inside the notebook.
+
+Have fun!
 
 <!-- CONTACT -->
 ## Contact
 
-Andres Becker - [![LinkedIn][linkedin-shield]][https://www.linkedin.com/in/andres-becker] - andres.becker@tum.de
+Andres Becker - [LinkedIn](https://www.linkedin.com/in/andres-becker) - andres.becker@tum.de
 
 Project Link: [https://github.com/andresbecker/Deep_RL_Actor_Critic](https://github.com/andresbecker/Deep_RL_Actor_Critic)
 
@@ -115,13 +115,3 @@ Project Link: [https://github.com/andresbecker/Deep_RL_Actor_Critic](https://git
 * [Abhishek Suran, Actor-Critic with tf-2-x](https://towardsdatascience.com/actor-critic-with-tensorflow-2-x-part-1-of-2-d1e26a54ce97)
 * [Lilian Weng, A (Long) Peek into Reinforcement Learning](https://lilianweng.github.io/lil-log/2018/02/19/a-long-peek-into-reinforcement-learning.html)
 * [Lilian Weng, Policy Gradient Algorithms](https://lilianweng.github.io/lil-log/2018/04/08/policy-gradient-algorithms.html)
-
-
-
-
-<!-- MARKDOWN LINKS & IMAGES -->
-<!-- https://www.markdownguide.org/basic-syntax/#reference-style-links -->
-[license-shield]: https://img.shields.io/github/license/andresbecker/repo.svg?style=for-the-badge
-[license-url]: https://github.com/andresbecker/repo/blob/master/LICENSE.txt
-[linkedin-shield]: https://img.shields.io/badge/-LinkedIn-black.svg?style=for-the-badge&logo=linkedin&colorB=555
-[linkedin-url]: https://linkedin.com/in/andresbecker
