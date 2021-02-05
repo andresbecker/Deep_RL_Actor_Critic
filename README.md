@@ -11,7 +11,7 @@
 <br />
 <p align="center">
   <a href="https://github.com/andresbecker/Deep_RL_Actor_Critic">
-    <img src="Resources/A2C.gif" width="200">
+    <img src="Resources/A2C.gif" width="400">
   </a>
 
   <h3 align="center">Advantage Actor-Critic</h3>
@@ -19,17 +19,9 @@
   <p align="center">
     Implementation of an Advantage Actor-Critic using Artificial Neural Networks
     <br />
-    <a href="https://github.com/andresbecker/Deep_RL_Actor_Critic"><strong>Explore the docs »</strong></a>
-    <br />
-    <br />
-    <a href="https://github.com/andresbecker/Deep_RL_Actor_Critic">View Demo</a>
-    ·
-    <a href="https://github.com/andresbecker/Deep_RL_Actor_Critic/issues">Report Bug</a>
-    ·
-    <a href="https://github.com/andresbecker/Deep_RL_Actor_Critic/issues">Request Feature</a>
+    <a href="https://github.com/andresbecker/Deep_RL_Actor_Critic/References/A2C_Summary/A2C_Summary.pdf"><strong>Explore the docs »</strong></a>
   </p>
 </p>
-
 
 
 <!-- TABLE OF CONTENTS -->
@@ -38,9 +30,6 @@
   <ol>
     <li>
       <a href="#about-the-project">About The Project</a>
-      <ul>
-        <li><a href="#built-with">Built With</a></li>
-      </ul>
     </li>
     <li>
       <a href="#getting-started">Getting Started</a>
@@ -50,9 +39,6 @@
       </ul>
     </li>
     <li><a href="#usage">Usage</a></li>
-    <li><a href="#roadmap">Roadmap</a></li>
-    <li><a href="#contributing">Contributing</a></li>
-    <li><a href="#license">License</a></li>
     <li><a href="#contact">Contact</a></li>
     <li><a href="#acknowledgements">Acknowledgements</a></li>
   </ol>
@@ -63,18 +49,19 @@
 <!-- ABOUT THE PROJECT -->
 ## About The Project
 
-[![Product Name Screen Shot][product-screenshot]](https://example.com)
+<p align="center">
+  <img src="Resources/Imp_diagram.png" width="500">
+</p>
 
-Here's a blank template to get started:
-**To avoid retyping too much info. Do a search and replace with your text editor for the following:**
-`andresbecker`, `Deep_RL_Actor_Critic`, `andres.becker@tum.de`, `Advantage Actor-Critic`, `project_description`
+This is a very simple implementation of a Deep Reinforcement Learning Advantage Actor-Critic. It uses 2 independent Artificial Neural Networks to approximate the Policy function (Actor) and the State-value function (Critic). To test the implementation, I use the Moon Lander environment provided by OpenAI-Gym.
 
+If you want to have a deeper understanding of the Actor-Critic algorithm, I strongly recommend you to take a look into the document `References/A2C_Summary/A2C_Summary.pdf` and `References/A2C_Presentation.pdf`. In `References/A2C_Summary/` you can also find the original $\\LaTeX$ document used to create the summary.
 
 ### Built With
 
-* []()
-* []()
-* []()
+* [Anaconda 4.9](https://www.anaconda.com/)
+* [TensorFlow 2.2](https://www.tensorflow.org/tutorials/quickstart/beginner)
+* [OpenAI Gym](https://gym.openai.com/)
 
 
 
@@ -85,11 +72,8 @@ To get a local copy up and running follow these simple steps.
 
 ### Prerequisites
 
-This is an example of how to list things you need to use the software and how to install them.
-* npm
-  ```sh
-  npm install npm@latest -g
-  ```
+An running installation of Anaconda. If you haven't installed Anaconda yet, you can follow the next tutorial:
+[Anaconda Installation](https://docs.anaconda.com/anaconda/install/)
 
 ### Installation
 
@@ -97,48 +81,23 @@ This is an example of how to list things you need to use the software and how to
    ```sh
    git clone https://github.com/andresbecker/Deep_RL_Actor_Critic.git
    ```
-2. Install NPM packages
+2. Install the environment
    ```sh
-   npm install
+   conda env create -f conda_environment.yml
    ```
-
-
 
 <!-- USAGE EXAMPLES -->
 ## Usage
 
-Use this space to show useful examples of how a project can be used. Additional screenshots, code examples and demos work well in this space. You may also link to more resources.
-
-_For more examples, please refer to the [Documentation](https://example.com)_
-
-
-
-<!-- ROADMAP -->
-## Roadmap
-
-See the [open issues](https://github.com/andresbecker/Deep_RL_Actor_Critic/issues) for a list of proposed features (and known issues).
-
-
-
-<!-- CONTRIBUTING -->
-## Contributing
-
-Contributions are what make the open source community such an amazing place to be learn, inspire, and create. Any contributions you make are **greatly appreciated**.
-
-1. Fork the Project
-2. Create your Feature Branch (`git checkout -b feature/AmazingFeature`)
-3. Commit your Changes (`git commit -m 'Add some AmazingFeature'`)
-4. Push to the Branch (`git push origin feature/AmazingFeature`)
-5. Open a Pull Request
-
-
-
-<!-- LICENSE -->
-## License
-
-Distributed under the MIT License. See `LICENSE` for more information.
-
-
+To train and test this implementation, simply activate the environment
+```sh
+conda activate A2C_env
+```
+open jupyter-lab
+```sh
+jupyter-lab
+```
+and navigate to open the notebook `A2C.ipynb`.
 
 <!-- CONTACT -->
 ## Contact
@@ -152,24 +111,16 @@ Project Link: [https://github.com/andresbecker/Deep_RL_Actor_Critic](https://git
 <!-- ACKNOWLEDGEMENTS -->
 ## Acknowledgements
 
-* []()
-* []()
-* []()
-
+* [Hado Van Hasselt, Advanced Deep Learning and Reinforcement Learning. Lecture 12: Policy Gradients and Actor Critics](https://youtu.be/bRfUxQs6xIM)
+* [Abhishek Suran, Actor-Critic with tf-2-x](https://towardsdatascience.com/actor-critic-with-tensorflow-2-x-part-1-of-2-d1e26a54ce97)
+* [Lilian Weng, A (Long) Peek into Reinforcement Learning](https://lilianweng.github.io/lil-log/2018/02/19/a-long-peek-into-reinforcement-learning.html)
+* [Lilian Weng, Policy Gradient Algorithms](https://lilianweng.github.io/lil-log/2018/04/08/policy-gradient-algorithms.html)
 
 
 
 
 <!-- MARKDOWN LINKS & IMAGES -->
 <!-- https://www.markdownguide.org/basic-syntax/#reference-style-links -->
-[contributors-shield]: https://img.shields.io/github/contributors/andresbecker/repo.svg?style=for-the-badge
-[contributors-url]: https://github.com/andresbecker/repo/graphs/contributors
-[forks-shield]: https://img.shields.io/github/forks/andresbecker/repo.svg?style=for-the-badge
-[forks-url]: https://github.com/andresbecker/repo/network/members
-[stars-shield]: https://img.shields.io/github/stars/andresbecker/repo.svg?style=for-the-badge
-[stars-url]: https://github.com/andresbecker/repo/stargazers
-[issues-shield]: https://img.shields.io/github/issues/andresbecker/repo.svg?style=for-the-badge
-[issues-url]: https://github.com/andresbecker/repo/issues
 [license-shield]: https://img.shields.io/github/license/andresbecker/repo.svg?style=for-the-badge
 [license-url]: https://github.com/andresbecker/repo/blob/master/LICENSE.txt
 [linkedin-shield]: https://img.shields.io/badge/-LinkedIn-black.svg?style=for-the-badge&logo=linkedin&colorB=555
