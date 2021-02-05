@@ -6,20 +6,12 @@
 *** for contributors-url, forks-url, etc. This is an optional, concise syntax you may use.
 *** https://www.markdownguide.org/basic-syntax/#reference-style-links
 -->
-[![Contributors][contributors-shield]][contributors-url]
-[![Forks][forks-shield]][forks-url]
-[![Stargazers][stars-shield]][stars-url]
-[![Issues][issues-shield]][issues-url]
-[![MIT License][license-shield]][license-url]
-[![LinkedIn][linkedin-shield]][linkedin-url]
-
-
 
 <!-- PROJECT LOGO -->
 <br />
 <p align="center">
   <a href="https://github.com/andresbecker/Deep_RL_Actor_Critic">
-    <img src="images/logo.png" alt="Logo" width="80" height="80">
+    <img src="Resources/A2C.gif" width="200">
   </a>
 
   <h3 align="center">Advantage Actor-Critic</h3>
@@ -151,7 +143,7 @@ Distributed under the MIT License. See `LICENSE` for more information.
 <!-- CONTACT -->
 ## Contact
 
-Andres Becker - andres.becker@tum.de
+Andres Becker - [![LinkedIn][linkedin-shield]][https://www.linkedin.com/in/andres-becker] - andres.becker@tum.de
 
 Project Link: [https://github.com/andresbecker/Deep_RL_Actor_Critic](https://github.com/andresbecker/Deep_RL_Actor_Critic)
 
