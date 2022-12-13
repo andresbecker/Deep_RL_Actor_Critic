@@ -65,9 +65,11 @@ If you want to have a deeper understanding of the Actor-Critic algorithm, I stro
 <!-- GETTING STARTED -->
 ## Getting Started
 
-To get a local copy up and running follow these simple steps.
+<!-- @import "[TOC]" {cmd="toc" depthFrom=1 depthTo=6 orderedList=false} -->
 
-### Prerequisites
+To get a local copy up and running follow these simple steps. 
+
+### Prerequisites (only for Ubuntu 20.04)
 
 A running installation of Anaconda. If you haven't installed Anaconda yet, you can follow the next tutorial: <br>
 [Anaconda Installation](https://docs.anaconda.com/anaconda/install/)
@@ -80,7 +82,17 @@ A running installation of Anaconda. If you haven't installed Anaconda yet, you c
    ```
 2. Install the environment
    ```sh
+   # For ubuntu 20.04
    conda env create -f conda_environment.yml
+
+   # For Ubuntu 22.04
+   conda deactivate # Only if base conda environment is loaded
+   python3 -m venv ~/venv/dl_seminar
+   . ~/venv/dl_seminar/bin/activate
+   pip3 install tensorflow tensorflow-probability matplotlib numpy pandas jupyterlab
+   pip3 install gym==0.17.3
+   pip3 install box2d-py==2.3.8
+
    ```
 
 <!-- USAGE EXAMPLES -->
@@ -88,7 +100,11 @@ A running installation of Anaconda. If you haven't installed Anaconda yet, you c
 
 To train and test this implementation, simply activate the environment
 ```sh
+# For ubuntu 20.04
 conda activate A2C_env
+
+# For Ubuntu 22.04
+. ~/venv/dl_seminar/bin/activate
 ```
 open jupyter-lab
 ```sh
